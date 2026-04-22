@@ -1,99 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Happy Birthday ❤️</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            background: black;
-            overflow: hidden;
-            text-align: center;
-            font-family: Arial;
-            color: white;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
 
-        h1 {
-            position: absolute;
-            top: 35%;
-            width: 100%;
-            font-size: 32px;
-            color: pink;
-            animation: fadeIn 3s ease-in-out;
-        }
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    text-align: center;
+    font-family: Arial;
+}
 
-        p {
-            position: absolute;
-            top: 55%;
-            width: 100%;
-            font-size: 20px;
-            color: white;
-            animation: fadeIn 5s ease-in-out;
-        }
+#text {
+    margin-top: 40%;
+    font-size: 24px;
+    padding: 20px;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 16px;
+    background: pink;
+    border: none;
+    border-radius: 10px;
+}
+</style>
 </head>
 
 <body>
 
-<h1 id="msg">Happy Birthday My Love 💖</h1>
-<p id="sub">You make my life beautiful ✨</p>
+<div id="text">Tap to start ❤️</div>
+<button onclick="start()">Start</button>
 
-<canvas id="canvas"></canvas>
+<audio id="music" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+let messages = [
+    "The day I met you ❤️",
+    "My life changed forever 💫",
+    "You are my happiness 💖",
+    "Happy Birthday My Love 🎂",
+    "I Love You Forever ❤️"
+];
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let i = 0;
 
-let particles = [];
+function typeText(text, callback) {
+    let j = 0;
+    document.getElementById("text").innerHTML = "";
 
-function createFirework() {
-    let x = Math.random() * canvas.width;
-    let y = canvas.height / 2;
+    let interval = setInterval(() => {
+        document.getElementById("text").innerHTML += text[j];
+        j++;
+        if (j >= text.length) {
+            clearInterval(interval);
+            setTimeout(callback, 1500);
+        }
+    }, 50);
+}
 
-    for (let i = 0; i < 60; i++) {
-        particles.push({
-            x: x,
-            y: y,
-            dx: (Math.random() - 0.5) * 6,
-            dy: (Math.random() - 0.5) * 6,
-            life: 100,
-            color: `hsl(${Math.random() * 360}, 100%, 60%)`
+function showNext() {
+    if (i < messages.length) {
+        typeText(messages[i], () => {
+            i++;
+            showNext();
         });
     }
 }
 
-function animate() {
-    ctx.fillStyle = "rgba(0,0,0,0.2)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach((p, i) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-
-        p.x += p.dx;
-        p.y += p.dy;
-        p.life--;
-
-        if (p.life <= 0) {
-            particles.splice(i, 1);
-        }
-    });
-
-    requestAnimationFrame(animate);
+function start() {
+    document.querySelector("button").style.display = "none";
+    document.getElementById("music").play();
+    showNext();
 }
-
-setInterval(createFirework, 800);
-animate();
 </script>
 
 </body>
